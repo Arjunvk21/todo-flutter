@@ -10,7 +10,12 @@ class TaskModel {
   String? userid;
 
   TaskModel(
-      {this.id, this.title, this.userid,this.description, this.createdAt, this.status});
+      {this.id,
+      this.title,
+      this.userid,
+      this.description,
+      this.createdAt,
+      this.status});
 
   factory TaskModel.fromJson(Map<String, dynamic> data) {
     Timestamp? timestamp = data['createdAt'];
@@ -18,7 +23,7 @@ class TaskModel {
       id: data['id'],
       userid: data['userid'],
       title: data['title'],
-      description: data['descrition'],
+      description: data['description'],
       createdAt: timestamp?.toDate(),
       status: data['status'],
     );
@@ -27,7 +32,7 @@ class TaskModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'userid':userid,
+      'userid': userid,
       'title': title,
       'description': description,
       'createdAt': createdAt,

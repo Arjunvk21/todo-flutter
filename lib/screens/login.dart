@@ -19,15 +19,17 @@ class _LoginState extends State<Login> {
   UserService _userService = UserService();
   bool _isloading = false;
 
-  _login()async {
+  _login() async {
     setState(() {
       _isloading = true;
     });
-    try{
-      _userModel = UserModel(email: _emailController.text,password: _passwordController.text);
+    try {
+      _userModel = UserModel(
+          email: _emailController.text, password: _passwordController.text);
       final data = await _userService.loginUser(_userModel);
-    }on FirebaseAuthException catch(e){
-
+      Navigator.pushNamed(context, '/home');
+    } on FirebaseAuthException catch (e) {
+      print(e);
     }
   }
 
@@ -101,13 +103,17 @@ class _LoginState extends State<Login> {
                               ),
                               GestureDetector(
                                 onTap: () async {
-                                  if (_formkey.currentState!.validate()) {}
+                                  if (_formkey.currentState!.validate()) {
+                                    _login();
+                                  }
                                 },
                                 child: Container(
-                                  height: MediaQuery.sizeOf(context).height * .05,
+                                  height:
+                                      MediaQuery.sizeOf(context).height * .05,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
-                                    color: const Color.fromARGB(255, 166, 219, 168),
+                                    color: const Color.fromARGB(
+                                        255, 166, 219, 168),
                                   ),
                                   child: Center(
                                       child: Text(
@@ -129,10 +135,15 @@ class _LoginState extends State<Login> {
                                   const SizedBox(
                                     width: 50,
                                   ),
-                                  Text(
-                                    'Register here',
-                                    style: GoogleFonts.aBeeZee(
-                                        fontSize: 15, fontWeight: FontWeight.bold),
+                                  InkWell(
+                                    onTap: () =>
+                                        Navigator.pushNamed(context, '/'),
+                                    child: Text(
+                                      'Register here',
+                                      style: GoogleFonts.aBeeZee(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                 ],
                               )
@@ -141,8 +152,11 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
-                  
-                  Visibility(visible: _isloading,child: Center(child: CircularProgressIndicator(),))
+                    Visibility(
+                        visible: _isloading,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ))
                   ],
                 ),
               ),

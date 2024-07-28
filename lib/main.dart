@@ -4,6 +4,7 @@ import 'package:provider/firebase_options.dart';
 import 'package:provider/screens/addtodo.dart';
 import 'package:provider/screens/homepage.dart';
 import 'package:provider/screens/login.dart';
+import 'package:provider/screens/splashscreen.dart';
 
 import 'screens/register.dart';
 
@@ -32,9 +33,10 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/addtodo': (context) => AddTodo(),
         '/': (context) => RegisterUser(),
-        '/login':(context) => Login(),
+        '/login': (context) => Login(),
+        '/splashview': (context) => SplashView(),
       },
-      initialRoute: '/home',
+      initialRoute: '/splashview',
     );
   }
 }

@@ -9,7 +9,8 @@ import 'package:provider/services/taskService.dart';
 import 'package:uuid/uuid.dart';
 
 class AddTodo extends StatefulWidget {
-  const AddTodo({super.key});
+  final TaskModel? task;
+  const AddTodo({super.key, this.task});
 
   @override
   State<AddTodo> createState() => _AddTodoState();
@@ -20,14 +21,38 @@ class _AddTodoState extends State<AddTodo> {
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isloading = false;
+  bool _edit = false;
+
+  getdata() {
+    if (widget.task != null) {
+      setState(() {
+        _titleController.text = widget.task!.title!;
+        _descriptionController.text = widget.task!.description!;
+        _edit = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getdata();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Add Task',
-          style: GoogleFonts.aBeeZee(),
-        ),
+        title: _edit == true
+            ? Text(
+                'Update Task',
+                style: GoogleFonts.aBeeZee(),
+              )
+            : Text(
+                'Add Task',
+                style: GoogleFonts.aBeeZee(),
+              ),
       ),
       body: Container(
         height: double.infinity,
@@ -41,10 +66,15 @@ class _AddTodoState extends State<AddTodo> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      Text(
-                        'Add Task',
-                        style: GoogleFonts.aBeeZee(fontSize: 25),
-                      ),
+                      _edit == true
+                          ? Text(
+                              'Update Task',
+                              style: GoogleFonts.aBeeZee(fontSize: 25),
+                            )
+                          : Text(
+                              'Add Task',
+                              style: GoogleFonts.aBeeZee(fontSize: 25),
+                            ),
                       SizedBox(
                         height: 30,
                       ),
@@ -77,16 +107,32 @@ class _AddTodoState extends State<AddTodo> {
                       GestureDetector(
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
-                            _addTask();
+                            if (_edit == true) {
+                              TaskModel task = TaskModel();
+                              TaskService taskService = TaskService();
+                              task = TaskModel(
+                                  id: widget.task?.id,
+                                  title: _titleController.text,
+                                  description: _descriptionController.text);
+                              taskService.updateTask(task);
+                              Navigator.pop(context);
+                            } else {
+                              _addTask();
+                            }
                           }
                         },
                         child: Container(
                           height: MediaQuery.sizeOf(context).height * .05,
                           child: Center(
-                              child: Text(
-                            'Create',
-                            style: GoogleFonts.aBeeZee(fontSize: 20),
-                          )),
+                              child: _edit == true
+                                  ? Text(
+                                      'Update',
+                                      style: GoogleFonts.aBeeZee(fontSize: 20),
+                                    )
+                                  : Text(
+                                      'Create',
+                                      style: GoogleFonts.aBeeZee(fontSize: 20),
+                                    )),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
                             color: const Color.fromARGB(255, 166, 219, 168),

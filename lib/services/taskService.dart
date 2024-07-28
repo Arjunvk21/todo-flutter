@@ -28,10 +28,16 @@ class TaskService {
     }
   }
 
-  //get current user task only
-  // Future<TaskModel> getMytasks(TaskModel task)async{
-  //   try{
-  //     return _taskCollection.doc()
-  //   }on FirebaseException catch(e){}
-  // }
+  Future<void> updateTask(TaskModel task) async {
+    try {
+      final map = task.toMap();
+      await _taskCollection.doc(task.id).update(map);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> deleteTask( id) async {
+    await _taskCollection.doc(id).delete();
+  }
 }
